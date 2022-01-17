@@ -14,14 +14,16 @@
                     <div class="border">
                         <div class="col border-bottom">
                             <div class="row p-3">
-                                <div class="col-6">Hardback</div>
+                                <div class="col-6">Count: <span id="count">1</span></div>
                                 <div class="col-6 text-end"><span class="h4 fw-bold">{{ product.price }} UAH</span></div>
                             </div>
                         </div>
                         <div class="col">
                             <div class="row p-3">
                                 <div class="col-6 text-end">
-                                    <button class="btn btn-secondary btn-sm" type="button">Add in basket</button>
+                                    <button type="button" id="plus-one" class="btn btn-success btn-sm">+</button>
+                                    <button type="button" id="minus-one" class="btn btn-danger btn-sm">-</button>
+                                    <button id="add-button" value="{{ product.id }}" class="btn btn-secondary btn-sm" type="button">Add in basket</button>
                                 </div>
                             </div>
 
@@ -31,4 +33,38 @@
             </div>
         </main>
     </div>
+
+    <script>
+        $(document).on('click', '#plus-one', ()=>{
+            let currentCount = Number($('#count').text())
+            currentCount++
+            $('#count').text(currentCount)
+        })
+        $(document).on('click', '#minus-one', ()=>{
+            let currentCount = Number($('#count').text())
+            if(currentCount > 1){
+              currentCount--
+                $('#count').text(currentCount)  
+            }
+        })
+    $(document).on('click', '#add-button', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "basket:basket_add" %}',
+            data:{
+                productid: $('#add-button').val(),
+                productqty: $('#count').text(),
+                csrfmiddlewaretoken:"{{ csrf_token }}",
+                action: 'post'
+            },
+            success: function (json) {
+                document.getElementById("basket-qty").innerHTML = json.qty
+            },
+            error: function (xhr, errmsq, err) {
+
+            }
+        })
+    })
+    </script>
 {% endblock %}

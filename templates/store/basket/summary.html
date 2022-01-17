@@ -2,4 +2,50 @@
 {% load static %}
 {% block title %} Basket Summary {% endblock %}
 
-{% block content %} Basket PAge {% endblock %}
+{% block content %} 
+
+<main class="pt-5">
+    <div class="container">
+        <h1 class="h5">Shopping basket</h1>
+        {% for item in basket %}
+        {% with product=item.product %}
+        <div data-index="{{product.id}}" class="row mb-4 border product-item">
+            <div class="col-md-5 col-lg-5 order-md-first bg-light">
+                <img src="{{ product.image.url }} "class="img-fluid mx-auto d-block" width="200px" src="" alt="">
+            </div>
+            <div class="col-md-7 col-lg-7 ps-md-3 ps-lg-5">
+                <h1 class="mb-0 h4">{{ product.title }}</h1>
+                <p><span class="lead">{{ product.author }}</span>(Author)</p>
+                <p>{{ product.description|slice:":120" }}...</p>
+                <div class="border">
+                    <div class="col border-bottom">
+                        <div class="row p-3">
+                            <div class="col-6">Count: <span id="count">1</span></div>
+                            <div class="col-6 text-end"><span class="h4 fw-bold">{{ item.total_price }} UAH</span></div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row p-3">
+                            <div class="col-6 text-end">
+                                <button type="button" id="plus-one" class="btn btn-success btn-sm">+</button>
+                                <button type="button" id="minus-one" class="btn btn-danger btn-sm">-</button><br>
+                            </div>
+                            <div class="col-6 text-end">
+                                <button type="button" id="minus-one" class="btn btn-primary btn-sm">Update</button>
+                                <button id="add-button" value="{{ product.id }}" class="btn btn-secondary btn-sm" type="button">Delete from basket</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+          </div>
+        {% endwith %}
+        {% endfor %}
+        <div class="col-12 text-end">
+            <div class="h6 fw-bold">Sub Total: <span id="subtotal">{{basket.get_total_proce}}</span>UAH</div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
